@@ -28,7 +28,7 @@
       $sth->execute($sql["params"]);
       $sth->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, get_called_class());  
       $foundModel = $sth->fetch();
-      if($foundModel) {
+      if ($foundModel) {
         $uid = uniqid();
         $foundModel->modelId = $uid;
         self::$foundModels[$uid] = $foundModel;
@@ -54,7 +54,7 @@
     }
 
     public function save() {
-      if(self::$foundModels[$this->modelId]) {
+      if (self::$foundModels[$this->modelId]) {
         $dbh = new PDO(...Settings::get()); 
         $sql = SQLGenerator::generateQuery(SQLGenerator::UPDATE, $this, self::$foundModels[$this->modelId]);
         $sth = $dbh->prepare($sql["query"]);
@@ -74,8 +74,8 @@
     }
     
     function __destruct() {
-       if($this->modelId) {
+      if ($this->modelId) {
         unset(self::$foundModels[$this->modelId]);
-       }
+      }
    }
   }

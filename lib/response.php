@@ -7,8 +7,7 @@
 	{
 		public static function get($object, $status = 200) {
 			http_response_code($status);
-
-			if(isset($object)) {
+			if (isset($object)) {
 				return [
 					'response' => $object
 				];
@@ -26,7 +25,6 @@
 	{
 		public static function get($message, $code = 0, $status = 400) {
 			http_response_code($status);
-
 			return [
 				'error' => [
 					'code' => $code,
@@ -43,19 +41,11 @@
 	{
 
 		public static function send($object) {
-
-			header("Access-Control-Allow-Origin: *");
-			header("Access-Control-Allow-Methods: *");
-			header("Content-Type: application/json");
-
-			if(gettype($object) == 'object' && get_class($object) == "Exception") {
+			if (gettype($object) == 'object' && get_class($object) == "Exception") {
 				$response = ResponseError::get($object->getMessage()) ;
 			} else {
 				$response = ResponseSuccess::get($object);
 			}	
-
-			
-
 			echo json_encode($response);
 		}
 	}
