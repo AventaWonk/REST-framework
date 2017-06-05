@@ -1,51 +1,55 @@
 <?php
+namespace general;
 
-	/**
-	* 
-	*/
-	class ResponseSuccess
+/**
+* 
+*/
+class ResponseSuccess
+{
+	public static function get($object, $status = 200) 
 	{
-		public static function get($object, $status = 200) {
-			http_response_code($status);
-			if (isset($object)) {
-				return [
-					'response' => $object
-				];
-			}
+		http_response_code($status);
+		if (isset($object)) {
 			return [
-				'code' => 1
+				'response' => $object
 			];
 		}
+		return [
+			'code' => 1
+		];
 	}
+}
 
-	/**
-	* 
-	*/
-	class ResponseError
+/**
+* 
+*/
+class ResponseError
+{
+	public static function get($message, $code = 0, $status = 400) 
 	{
-		public static function get($message, $code = 0, $status = 400) {
-			http_response_code($status);
-			return [
-				'error' => [
-					'code' => $code,
-					'message' => $message
-				]
-			];
-		}
+		http_response_code($status);
+		return [
+			'error' => [
+				'code' => $code,
+				'message' => $message
+			]
+		];
 	}
+}
 
-	/**
-	* 
-	*/
-	class Response
+/**
+* 
+*/
+class Response
+{
+
+	public static function send($object) 
 	{
-
-		public static function send($object) {
-			if (gettype($object) == 'object' && get_class($object) == "Exception") {
-				$response = ResponseError::get($object->getMessage()) ;
-			} else {
-				$response = ResponseSuccess::get($object);
-			}	
-			echo json_encode($response);
-		}
+		if (gettype($object) == 'object' && get_class($object) == "Exception") {
+			$response = ResponseError::get($object->getMessage()) ;
+		} else {
+			$response = ResponseSuccess::get($object);
+		}	
+		echo json_encode($response);
 	}
+}

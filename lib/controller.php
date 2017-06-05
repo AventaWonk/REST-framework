@@ -1,9 +1,10 @@
 <?php
+namespace general;
+
+/**
+* Controller
+*/
+class Controller
+{
 	
-	/**
-	* Controller
-	*/
-	class Controller
-	{
-		
-	}
+}
