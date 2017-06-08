@@ -100,7 +100,7 @@ class SqlGenerator
   protected static function generateSelectAll($model)
   {
     $i = 0;
-    $model2 = get_class_vars($model);
+    $model2 = get_class_vars(Router::APP_NAMESCPACE . $model);
     foreach ($model2 as $key => $value) {
       if($i == 0) {
         $columns = $key;

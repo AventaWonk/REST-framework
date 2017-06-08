@@ -10,9 +10,9 @@ use general\Model;
 */
 class SampleModel extends Model
 {
-  public $field1;
 
+  public $field1;
   public $field2;
-  
   public $fieldN;
+  
 }
