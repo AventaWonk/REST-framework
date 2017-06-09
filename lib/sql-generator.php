@@ -100,7 +100,7 @@ class SqlGenerator
   protected static function generateSelectAll($model)
   {
     $i = 0;
-    $model2 = get_class_vars(Router::APP_NAMESCPACE . $model);
+    $model2 = get_class_vars($model::getChildModel());
     foreach ($model2 as $key => $value) {
       if($i == 0) {
         $columns = $key;
@@ -111,7 +111,7 @@ class SqlGenerator
     }
 
     return [
-      "query" => sprintf(self::SELECT_ALL, $columns, mb_convert_case($model, MB_CASE_LOWER) . "s"),
+      "query" => sprintf(self::SELECT_ALL, $columns, $model::getChildTableName()),
     ];
   }
 

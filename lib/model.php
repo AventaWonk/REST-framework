@@ -6,6 +6,7 @@ include 'sql-generator.php';
 use PDO;
 use Settings;
 use Exception;
+use ReflectionClass;
 
 /**
 * Model
@@ -15,14 +16,31 @@ class Model
   private $modelId = null;
   private static $foundModels;
 
-  public static function getCalledModelName() 
+  public static function getChildModelName() 
   {
-    return str_replace(Router::APP_NAMESCPACE, "", get_called_class());
+    $function = new ReflectionClass(get_called_class());
+    return $function->getShortName();
   }
 
-  public static function getTableName() 
+  public static function getChildModel() 
   {
-    return mb_convert_case(self::getCalledModelName(), MB_CASE_LOWER) . "s";
+    return get_called_class();
+  }
+
+  public static function getChildTableName() 
+  {
+    return mb_convert_case(self::getChildModelName(), MB_CASE_LOWER) . "s";
+  }
+
+  public function getdModelName() 
+  {
+    $function = new ReflectionClass(get_called_class());
+    return $function->getShortName();
+  }
+
+  public function getTableName() 
+  {
+    return mb_convert_case($this->getChildModelName(), MB_CASE_LOWER) . "s";
   }
 
   public static function add($model) 
@@ -40,7 +58,7 @@ class Model
     $sql = SqlGenerator::generateQuery(SqlGenerator::SELECT, $model);
     $sth = $dbh->prepare($sql["query"]);
     $sth->execute($sql["params"]);
-    $sth->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, self::getCalledModelName());  
+    $sth->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, self::getChildModelName());  
     $foundModel = $sth->fetch();
     if ($foundModel) {
       $uid = uniqid();
@@ -55,7 +73,7 @@ class Model
 
   public static function findAll() 
   {
-    $model = self::getCalledModelName();
+    $model = get_called_class();
     $rows = [];
     $dbh = new PDO(...Settings::get());
     $sql = SqlGenerator::generateQuery(SqlGenerator::SELECT_ALL, $model);
