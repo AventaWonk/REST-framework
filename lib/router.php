@@ -85,7 +85,8 @@ class Router
 			Response::send($result);
 
 		} catch (Exception $e) {
-		  Response::send($e);
+		  // Response::send($e);
+		  echo $e;
 		}
 	}
 }

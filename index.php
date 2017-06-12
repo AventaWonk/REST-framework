@@ -1,6 +1,9 @@
 <?php
-  include 'lib/router.php';
-  include 'settings.php';
-  
-  general\Router::start(general\Router::DENY_PUBLIC_ACCESS);
-  
+namespace app;
+
+include 'lib/router.php';
+include 'settings.php';
+
+use Router;
+
+Router::start(Router::DENY_PUBLIC_ACCESS);
