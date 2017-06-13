@@ -40,23 +40,23 @@ class ResponseError
 /**
 * 
 */
-class Response
-{
-	public $response;
+// class Response
+// {
+// 	// public $response;
 
-	function __construct($response)
-	{
-		$this->response = $response;
-	}
+// 	// function __construct($response)
+// 	// {
+// 	// 	$this->response = $response;
+// 	// }
 
-	public static function send($object) 
-	{
-		// if (gettype($object) == 'object' && get_class($object) == "Exception") {
-		// 	$response = ResponseError::get($object->getMessage()) ;
-		// } else {
-		// 	$response = ResponseSuccess::get($object);
-		// }	
-		$response = ResponseSuccess::get($object->response);
-		echo json_encode($response);
-	}
-}
+// 	// public static function send($object) 
+// 	// {
+// 	// 	// if (gettype($object) == 'object' && get_class($object) == "Exception") {
+// 	// 	// 	$response = ResponseError::get($object->getMessage()) ;
+// 	// 	// } else {
+// 	// 	// 	$response = ResponseSuccess::get($object);
+// 	// 	// }	
+// 	// 	// $response = ResponseSuccess::get($object->response);
+// 	// 	echo json_encode($object);
+// 	// }
+// }

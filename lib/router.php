@@ -82,10 +82,9 @@ class Router
 			
 			$controller = new $class_name();
 			$result = $controller->$method_name(...$params);
-			Response::send($result);
+			echo $result;
 
 		} catch (Exception $e) {
-		  // Response::send($e);
 		  echo $e;
 		}
 	}
