@@ -1,7 +1,5 @@
 <?php
-namespace authentication;
-
-include 'user.php';
+namespace vendor\authentication;
 
 /**
 * Authentication class
@@ -39,7 +37,7 @@ class Authentication
     if ($foundUser) {
       self::$currentUser = $foundUser;
       return true;
-    } 
+    }
     return false;
   }
 

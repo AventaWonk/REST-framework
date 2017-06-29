@@ -1,12 +1,10 @@
 <?php
-namespace general;
-
-include 'sql-generator.php';
+namespace vendor\core;
 
 use PDO;
-use Settings;
 use Exception;
 use ReflectionClass;
+use vendor\database\SQLgenerator;
 
 /**
 * Model
@@ -16,49 +14,49 @@ class Model
   private $modelId = null;
   private static $foundModels;
 
-  public static function getChildModelName() 
+  public static function getChildModelName()
   {
     $function = new ReflectionClass(get_called_class());
     return $function->getShortName();
   }
 
-  public static function getChildModel() 
+  public static function getChildModel()
   {
     return get_called_class();
   }
 
-  public static function getChildTableName() 
+  public static function getChildTableName()
   {
     return mb_convert_case(self::getChildModelName(), MB_CASE_LOWER) . "s";
   }
 
-  public function getdModelName() 
+  public function getdModelName()
   {
     $function = new ReflectionClass(get_called_class());
     return $function->getShortName();
   }
 
-  public function getTableName() 
+  public function getTableName()
   {
     return mb_convert_case($this->getChildModelName(), MB_CASE_LOWER) . "s";
   }
 
-  public static function add($model) 
+  public static function add($model)
   {
-    $dbh = new PDO(...Settings::get()); 
-    $sql = SqlGenerator::generateQuery(SqlGenerator::INSERT, $model);
-    $sth = $dbh->prepare($sql["query"]);  
+    $dbh = new PDO(...Settings::get());
+    $sql = ::generateQuery(SQLgenerator::INSERT, $model);
+    $sth = $dbh->prepare($sql["query"]);
     $sth->execute($sql["params"]);
     $dbh = null;
   }
 
-  public static function find($model) 
+  public static function find($model)
   {
     $dbh = new PDO(...Settings::get());
-    $sql = SqlGenerator::generateQuery(SqlGenerator::SELECT, $model);
+    $sql = SQLgenerator::generateQuery(SQLgenerator::SELECT, $model);
     $sth = $dbh->prepare($sql["query"]);
     $sth->execute($sql["params"]);
-    $sth->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, self::getChildModelName());  
+    $sth->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, self::getChildModelName());
     $foundModel = $sth->fetch();
     if ($foundModel) {
       $uid = uniqid();
@@ -71,26 +69,26 @@ class Model
     }
   }
 
-  public static function findAll() 
+  public static function findAll()
   {
     $model = get_called_class();
     $rows = [];
     $dbh = new PDO(...Settings::get());
-    $sql = SqlGenerator::generateQuery(SqlGenerator::SELECT_ALL, $model);
-    $sth = $dbh->query($sql["query"]);  
-    $sth->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $model);  
-    while($obj = $sth->fetch()) {  
-        $rows[] = $obj;  
+    $sql = SQLgenerator::generateQuery(SQLgenerator::SELECT_ALL, $model);
+    $sth = $dbh->query($sql["query"]);
+    $sth->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $model);
+    while($obj = $sth->fetch()) {
+        $rows[] = $obj;
     }
     $dbh = null;
     return $rows;
   }
 
   public function save() {
-    if (self::$foundModels[$this->modelId]) 
+    if (self::$foundModels[$this->modelId])
     {
-      $dbh = new PDO(...Settings::get()); 
-      $sql = SqlGenerator::generateQuery(SqlGenerator::UPDATE, $this, self::$foundModels[$this->modelId]);
+      $dbh = new PDO(...Settings::get());
+      $sql = SQLgenerator::generateQuery(SQLgenerator::UPDATE, $this, self::$foundModels[$this->modelId]);
       $sth = $dbh->prepare($sql["query"]);
       $sth->execute($sql["params"]);
       $dbh = null;
@@ -99,16 +97,16 @@ class Model
     }
   }
 
-  public function delete() 
+  public function delete()
   {
-    $dbh = new PDO(...Settings::get()); 
-    $sql = SQLGenerator::generateQuery(SqlGenerator::DELETE, $this);
+    $dbh = new PDO(...Settings::get());
+    $sql = SQLgenerator::generateQuery(SQLgenerator::DELETE, $this);
     $sth = $dbh->prepare($sql["query"]);
     $sth->execute($sql["params"]);
     $dbh = null;
   }
-  
-  function __destruct() 
+
+  function __destruct()
   {
     if ($this->modelId) {
       unset(self::$foundModels[$this->modelId]);

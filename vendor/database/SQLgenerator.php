@@ -1,10 +1,10 @@
 <?php
-namespace general;
+namespace vendor\database;
 
 /**
 * SQL generator for PDO
 */
-class SqlGenerator
+class SQLGenerator
 {
   const INSERT = "INSERT INTO %s %s VALUES %s";
   const SELECT = "SELECT %s FROM %s WHERE %s";
@@ -12,7 +12,7 @@ class SqlGenerator
   const UPDATE = "UPDATE %s SET %s WHERE %s";
   const DELETE = "DELETE FROM %s WHERE %s";
 
-  protected static function generateInsert($model) 
+  protected static function generateInsert($model)
   {
     $availibleParams = [];
     $params = "";
@@ -40,7 +40,7 @@ class SqlGenerator
     ];
   }
 
-  protected static function generateSelect($model) 
+  protected static function generateSelect($model)
   {
     $availibleParams = [];
     $whereString = "";
@@ -70,7 +70,7 @@ class SqlGenerator
     ];
   }
 
-  protected static function generateDelete($model) 
+  protected static function generateDelete($model)
   {
     $availibleParams = [];
     $whereString = "";
@@ -90,7 +90,7 @@ class SqlGenerator
       }
       $i++;
     }
-    
+
     return [
       "query" => sprintf(self::DELETE, $model->getTableName(), $whereString),
       "params" => $availibleParams,
@@ -115,7 +115,7 @@ class SqlGenerator
     ];
   }
 
-   protected static function generateUpdate($newModel, $previousModel) 
+   protected static function generateUpdate($newModel, $previousModel)
    {
     $availibleParams = [];
     $whereString = "";
@@ -159,13 +159,13 @@ class SqlGenerator
     ];
   }
 
-  public static function generateQuery($query, $model, $previousModel = 0) 
+  public static function generateQuery($query, $model, $previousModel = 0)
   {
     switch ($query) {
       case self::INSERT:
         return self::generateInsert($model);
         break;
-      
+
       case self::SELECT:
         return self::generateSelect($model);
         break;

@@ -1,5 +1,5 @@
 <?php
-namespace general;
+namespace vendor\core;
 
 /**
 * Controller
@@ -19,7 +19,7 @@ class Controller
       case self::ERROR:
         $result = ResponseError::get($object);
         break;
-      
+
       default:
         $result = ResponseError::get($object);
         break;
@@ -36,5 +36,5 @@ class Controller
   {
     return new ViewResponse($object, $result);
   }
-	
+
 }

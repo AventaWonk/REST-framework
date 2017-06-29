@@ -1,9 +1,7 @@
 <?php
-namespace app;
 
-include 'lib/router.php';
-include 'settings.php';
+require_once('vendor/autoload.php');
 
-use Router;
+use vendor\core\Router;
 
 Router::start(Router::DENY_PUBLIC_ACCESS);
