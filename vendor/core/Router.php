@@ -3,6 +3,7 @@ namespace vendor\core;
 
 use ReflectionMethod;
 use Exception;
+use vendor\core\ClassTools;
 
 /**
 * Router class
@@ -22,19 +23,11 @@ class Router
 	public static function start($access = 0)
 	{
 		try {
-			$params = [];
-			$method;
-			$class_name;
-			$method_name;
-			$file_name;
-			$args = [];
-
 			if ($access == self::ALLOW_PUBLIC_ACCESS) {
 				header("Access-Control-Allow-Origin: *");
 			}
-
 			// header("Access-Control-Allow-Methods: *");
-			// header("Content-Type: application/json");
+
 
 			$method = $_SERVER['REQUEST_METHOD'];
 
@@ -60,30 +53,13 @@ class Router
           break;
       }
 
-			$class_name = self::APP_DIR .  DIRECTORY_SEPARATOR . self::CONTROLLERS_DIR . DIRECTORY_SEPARATOR . mb_convert_case($pieces[0], MB_CASE_TITLE) . "Controller";
-			$method_name = $pieces[1];
-			$file_name = self::APP_DIR .  DIRECTORY_SEPARATOR . self::CONTROLLERS_DIR . DIRECTORY_SEPARATOR . mb_convert_case($pieces[0], MB_CASE_TITLE) . "Controller.php";
-      // try {
-      //   $Controller = new $class_name();
-      // } catch (Exception $e) {
-      //
-      // }
+			$className = self::APP_DIR .  DIRECTORY_SEPARATOR . self::CONTROLLERS_DIR . DIRECTORY_SEPARATOR . mb_convert_case($pieces[0], MB_CASE_TITLE) . "Controller";
+			$methodName = $pieces[1];
 
-			if (file_exists($file_name)) {
-				require($file_name);
-			} else {
-				throw new Exception("Method $pieces[0] does not exists", 1);
-			}
+      $ct = new ClassTools($className, $methodName);
+			$methodParams = $ct->getMethodParams();
 
-			if (method_exists($class_name, $method_name)) {
-				$ReflectionMethod =  new ReflectionMethod($class_name, $method_name);
-				foreach( $ReflectionMethod->getParameters() as $param) {
-		      $args[] = $param->name;
-		    }
-			} else {
-				throw new Exception("Method $method_name does not exists", 1);
-			}
-
+      $receivedParams = [];
 			if ($method == self::GET) {
 				foreach ($args as $value) {
 					if(!isset($_GET[$value])){
@@ -100,9 +76,14 @@ class Router
 				}
 			}
 
-			$controller = new $class_name();
-			$result = $controller->$method_name(...$params);
-			echo $result;
+			$controller = new $className();
+			$result = $controller->$methodName(...$params);
+
+      if ($result) {
+        echo $result;
+      } else {
+        throw new Exception("Method {$className} was not configured correctly", 1);
+      }
 
 		} catch (Exception $e) {
 		  echo $e;

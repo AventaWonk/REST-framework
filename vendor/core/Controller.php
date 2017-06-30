@@ -11,6 +11,8 @@ class Controller
 
   public function JSON($object, $result = self::SUCCESS)
   {
+    header("Content-Type: application/json");
+
     switch ($result) {
       case self::SUCCESS:
         $result = ResponseSuccess::get($object);
@@ -24,6 +26,7 @@ class Controller
         $result = ResponseError::get($object);
         break;
     }
+
     return json_encode($result);
   }
 
