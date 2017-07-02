@@ -56,28 +56,12 @@ class Router
 			$className = self::APP_DIR .  DIRECTORY_SEPARATOR . self::CONTROLLERS_DIR . DIRECTORY_SEPARATOR . mb_convert_case($pieces[0], MB_CASE_TITLE) . "Controller";
 			$methodName = $pieces[1];
 
-      $ct = new ClassTools($className, $methodName);
-			$methodParams = $ct->getMethodParams();
-
-      $receivedParams = [];
-			if ($method == self::GET) {
-				foreach ($args as $value) {
-					if(!isset($_GET[$value])){
-						throw new Exception("Has not all params", 1);
-					}
-					$params[] = $_GET[$value];
-				}
-			} else {
-				foreach ($args as $value) {
-					if (!isset($_POST[$value])){
-						throw new Exception("Has not all params", 1);
-					}
-					$params[] = $_POST[$value];
-				}
-			}
+      $ct = new ClassTools($className);
+			$methodParams = $ct->getMethodParams($methodName);
+      $receivedValues = $ct->getReceivedParams($methodParams);
 
 			$controller = new $className();
-			$result = $controller->$methodName(...$params);
+			$result = $controller->$methodName(...$receivedValues);
 
       if ($result) {
         echo $result;

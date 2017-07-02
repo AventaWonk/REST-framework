@@ -1,13 +1,16 @@
 <?php
 namespace vendor\core;
 
+use Exception;
+use ReflectionMethod;
+
 /**
  *
  */
-class ClassTools extends
+class ClassTools
 {
   protected $className;
-  protected $methodName
+  protected $methodName;
 
   function __construct($className = false, $methodName = false)
   {
@@ -15,27 +18,28 @@ class ClassTools extends
     $this->methodName = $methodName;
   }
 
-  public function getMethodParams($methodName = false)
+  public function getMethodParams($methodName)
   {
-    if ($this->methodName || $methodName) {
-      if (method_exists($className, $methodName)) {
-        $params = [];
-        $ReflectionMethod =  new ReflectionMethod($className, $methodName);
-        foreach ( $ReflectionMethod->getParameters() as $param) {
-          $params[] = $param->name;
-        }
-        return $params;
-      } else {
-        throw new Exception("{$methodName} does not exists", 1);
-      }
-    } else {
-      throw new Exception("Bad fun call", 1);
+    $params = [];
+    $ReflectionMethod =  new ReflectionMethod($this->className, $methodName);
+    foreach ($ReflectionMethod->getParameters() as $param) {
+      $params[] = $param->name;
     }
+    return $params;
   }
 
-  public function getRecievedParams()
+  public function getReceivedParams($requiredParams)
   {
-    # code...
+    $receivedParams = [];
+    foreach ($requiredParams as $requiredParam) {
+      $receivedParam = $_REQUEST[$requiredParam];
+      if ($receivedParam) {
+        $receivedParams[] = $receivedParam;
+      } else {
+        throw new Exception("Error Processing Request", 1);
+      }
+    }
+    return $receivedParams;
   }
 
   public function setClassName($className)

@@ -9,9 +9,9 @@ use vendor\core\Controller;
 class SampleController extends Controller
 {
 
-  public function sampleMethod()
+  public function sample()
   {
-    //
+    return $this->JSON();
   }
 
 }

@@ -4,20 +4,16 @@ namespace vendor\response;
 /**
 *
 */
-class Response
+class Response extends fResponse
 {
-
-	const SUCCESS = true;
-  const ERROR = false;
-  const SUCCESS_DEFAULT_STATUS = 200;
-  const ERROR_DEFAULT_STATUS = 400;
-
   protected $object;
-  protected $status
+  protected $status;
+	protected $result;
 
-  public function set($object, int $status)
+  public function set($object, bool $result, int $status)
   {
   	$this->object = $object;
+		$this->result = $result;
   	$this->status = $status
   }
 

@@ -1,6 +1,9 @@
 <?php
 namespace vendor\core;
 
+use vendor\response\ResponseSuccess;
+use vendor\response\ResponseError;
+
 /**
 * Controller
 */
@@ -8,8 +11,9 @@ class Controller
 {
   const SUCCESS = true;
   const ERROR = false;
+  const DONE = true;
 
-  public function JSON($object, $result = self::SUCCESS)
+  public function JSON($object = self::DONE, $result = self::SUCCESS)
   {
     header("Content-Type: application/json");
 
