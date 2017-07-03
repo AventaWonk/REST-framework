@@ -4,81 +4,56 @@ namespace vendor\response;
 /**
 *
 */
-class Response extends fResponse
+class Response
 {
-  protected $object;
-  protected $status;
-	protected $result;
+  const SUCCESS = true;
+  const ERROR = false;
 
-  public function set($object, bool $result, int $status)
+  const SUCCESS_DEFAULT_STATUS = 200;
+  const ERROR_DEFAULT_STATUS = 400;
+
+  const SUCCESS_DEFAULT_CODE = 1;
+
+  protected $object;
+  protected $message;
+  protected $status;
+  protected $code;
+
+  function __construct($object = self::SUCCESS_DEFAULT_CODE)
   {
   	$this->object = $object;
-		$this->result = $result;
-  	$this->status = $status
   }
 
-  public function get()
+  public function success()
   {
-  	return [
-			'response' => $this->$object,
-			'status' => $this->status,
+		return [
+		  'response' => $this->object
 		];
   }
 
-}
-
-/**
-*
-*/
-class ResponseSuccess extends Response
-{
-
-	function __construct($object, $status = 200)
-	{
-		if (isset($object)) {
-			$this->object = [
-				'response' => $object
-			];
-		} else {
-			$this->object = [
-				'code' => $object
-			];
-		}
-
-		$this->status = $status;
-	}
-
-}
-
-/**
-*
-*/
-class ResponseError extends Response
-{
-
-	function __construct($message, $code = 0, $status = 400)
-	{
-		$this->object = [
-			'error' => [
-				'code' => $code,
-				'message' => $message
-			];
-		];
-
-		$this->status = $status;
-	}
-
-}
-
-/**
-*
-*/
-class ResponseSender
-{
-
-  public function send($response)
+  public function failure()
   {
+    return [
+		  'error' => [
+			  'code' => $this->code,
+				'message' => $this->message
+			]
+		];
+  }
 
+  public function setMessage($message)
+  {
+    $this->message = $message;
+  }
+
+  public function setStatus($status)
+  {
+    $this->status = $status;
+  }
+
+  public function setCode($code)
+  {
+    $this->code = $code;
   }
 
 }

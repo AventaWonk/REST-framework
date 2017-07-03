@@ -1,8 +1,7 @@
 <?php
 namespace vendor\core;
 
-use vendor\response\ResponseSuccess;
-use vendor\response\ResponseError;
+use vendor\response\Response;
 
 /**
 * Controller
@@ -17,21 +16,24 @@ class Controller
   {
     header("Content-Type: application/json");
 
+    $response;
     switch ($result) {
       case self::SUCCESS:
-        $result = ResponseSuccess::get($object);
+        $r = new Response;
+        $response = $r->success();
         break;
 
       case self::ERROR:
-        $result = ResponseError::get($object);
+
         break;
 
       default:
-        $result = ResponseError::get($object);
+        $r = new Response;
+        $response = $r->success();
         break;
     }
 
-    return json_encode($result);
+    return json_encode($response);
   }
 
   public function XML($object, $result = self::SUCCESS)

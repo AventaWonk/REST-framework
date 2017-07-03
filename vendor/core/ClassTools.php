@@ -10,12 +10,10 @@ use ReflectionMethod;
 class ClassTools
 {
   protected $className;
-  protected $methodName;
 
-  function __construct($className = false, $methodName = false)
+  function __construct($className = false)
   {
     $this->className = $className;
-    $this->methodName = $methodName;
   }
 
   public function getMethodParams($methodName)
@@ -51,14 +49,5 @@ class ClassTools
   {
     return $this->className;
   }
-
-  public function setMethodName($methodName)
-  {
-    $this->methodName = $methodName;
-  }
-
-  public function getMethodName()
-  {
-    return $this->$methodName;
-  }
+  
 }
