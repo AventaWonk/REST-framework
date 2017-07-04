@@ -20,17 +20,16 @@ class Router
   const MODELS_DIR = 'models';
   const SETTINGS_DIR = 'settings';
 
-	public static function start($access = 0)
+	public static function start($settings = [])
 	{
 		try {
-			if ($access == self::ALLOW_PUBLIC_ACCESS) {
-				header("Access-Control-Allow-Origin: *");
-			}
-			// header("Access-Control-Allow-Methods: *");
+      $appSettings = new fSettings($settings);
 
+			$headers = new Headers();
+      $headers->setHeaders($appSettings)
+        ->sendHeaders();
 
 			$method = $_SERVER['REQUEST_METHOD'];
-
       switch ($method) {
         case self::GET:
           if (isset($_GET['method'])) {
