@@ -6,31 +6,32 @@ namespace vendor\core;
  */
 class Headers
 {
+
   private $headers = [];
 
   function __construct()
   {
-    # code...
+    
   }
 
-  public function setAccessControlOrigin()
-  {
-    $this->headers[] = "Access-Control-Allow-Origin: *";
-  }
+  // public function setAccessControlOrigin()
+  // {
+  //   $this->headers[] = "Access-Control-Allow-Origin: *";
+  // }
+  //
+  // public function setAccessControlMethods()
+  // {
+  //   $this->headers[] = "Access-Control-Allow-Methods: *";
+  // }
 
-  public function setAccessControlMethods()
+  public function setHeaders(fSettings $as)
   {
-    $this->headers[] = "Access-Control-Allow-Methods: *";
-  }
-
-  public function setHeaders(fSettings $settings)
-  {
-    // $headers = $settings->getAccessControlHeaders();
+    $headers = $as->getAccessControlHeaders();
   }
 
   public function sendHeaders()
   {
-    foreach ($headers as $header) {
+    foreach ($this->headers as $header) {
       header($header);
     }
   }

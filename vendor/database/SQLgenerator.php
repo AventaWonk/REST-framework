@@ -14,13 +14,13 @@ class SQLGenerator
 
   protected static function generateInsert($model)
   {
-    $availibleParams = [];
+    $availableParams = [];
     $params = "";
     $values = "";
 
     $i = 0;
     foreach ($model as $key => $name) {
-      $availibleParams[$key] = $name;
+      $availableParams[$key] = $name;
       if($i == 0) {
         $params .= $key;
         $values .= ":" . $key;
@@ -36,13 +36,13 @@ class SQLGenerator
 
     return [
       "query" => sprintf(self::INSERT, $model->getTableName(), $params, $values),
-      "params" => $availibleParams,
+      "params" => $availableParams,
     ];
   }
 
   protected static function generateSelect($model)
   {
-    $availibleParams = [];
+    $availableParams = [];
     $whereString = "";
 
     $i = 0;
@@ -51,13 +51,13 @@ class SQLGenerator
         $params = $key;
         $whereString = $key . " = :" . $key;
         if($name) {
-          $availibleParams[$key] = $name;
+          $availableParams[$key] = $name;
           $whereString = $key . " = :" . $key;
         }
       } else {
         $params .= ", " . $key;
         if($name) {
-          $availibleParams[$key] = $name;
+          $availableParams[$key] = $name;
           $whereString .= " AND " . $key . " = :" . $key;
         }
       }
@@ -66,25 +66,25 @@ class SQLGenerator
 
     return [
       "query" => sprintf(self::SELECT, $params, $model->getTableName(), $whereString),
-      "params" => $availibleParams,
+      "params" => $availableParams,
     ];
   }
 
   protected static function generateDelete($model)
   {
-    $availibleParams = [];
+    $availableParams = [];
     $whereString = "";
 
     $i = 0;
     foreach ($model as $key => $name) {
       if($i == 0) {
         if($name) {
-          $availibleParams[$key] = $name;
+          $availableParams[$key] = $name;
           $whereString .= $key . " = :" . $key;
         }
       } else {
         if($name) {
-          $availibleParams[$key] = $name;
+          $availableParams[$key] = $name;
           $whereString .= " AND " . $key . " = :" . $key;
         }
       }
@@ -93,7 +93,7 @@ class SQLGenerator
 
     return [
       "query" => sprintf(self::DELETE, $model->getTableName(), $whereString),
-      "params" => $availibleParams,
+      "params" => $availableParams,
     ];
   }
 

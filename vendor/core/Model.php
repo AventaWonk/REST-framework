@@ -30,7 +30,7 @@ class Model
     return mb_convert_case(self::getChildModelName(), MB_CASE_LOWER) . "s";
   }
 
-  public function getdModelName()
+  public function getModelName()
   {
     $function = new ReflectionClass(get_called_class());
     return $function->getShortName();
@@ -44,7 +44,7 @@ class Model
   public static function add($model)
   {
     $dbh = new PDO(...Settings::get());
-    $sql = ::generateQuery(SQLgenerator::INSERT, $model);
+    $sql = SQLgenerator::generateQuery(SQLgenerator::INSERT, $model);
     $sth = $dbh->prepare($sql["query"]);
     $sth->execute($sql["params"]);
     $dbh = null;

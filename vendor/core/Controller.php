@@ -15,8 +15,7 @@ class Controller
   public function JSON($object = self::DONE, $result = self::SUCCESS)
   {
     header("Content-Type: application/json");
-
-    $response;
+    
     switch ($result) {
       case self::SUCCESS:
         $r = new Response;

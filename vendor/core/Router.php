@@ -11,9 +11,7 @@ use vendor\core\ClassTools;
 class Router
 {
   const GET = 'GET';
-	const POST = 'POST';
-	const ALLOW_PUBLIC_ACCESS = 1;
-	const DENY_PUBLIC_ACCESS = 0;
+  const POST = 'POST';
 
   const APP_DIR = 'app';
 	const CONTROLLERS_DIR = 'controllers';
@@ -25,9 +23,9 @@ class Router
 		try {
       $appSettings = new fSettings($settings);
 
-			$headers = new Headers();
-      $headers->setHeaders($appSettings)
-        ->sendHeaders();
+      $headers = new Headers();
+      $headers->setHeaders($appSettings);
+      $headers->sendHeaders();
 
 			$method = $_SERVER['REQUEST_METHOD'];
       switch ($method) {
