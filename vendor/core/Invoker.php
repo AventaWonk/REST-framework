@@ -5,9 +5,9 @@ use Exception;
 use ReflectionMethod;
 
 /**
- *
+ * Invoker class
  */
-class ClassTools
+class Invoker
 {
   protected $className;
 
@@ -23,21 +23,16 @@ class ClassTools
     foreach ($ReflectionMethod->getParameters() as $param) {
       $params[] = $param->name;
     }
+
     return $params;
   }
 
-  public function getReceivedParams($requiredParams)
+  public function Invoke($methodName, $receivedParams)
   {
-    $receivedParams = [];
-    foreach ($requiredParams as $requiredParam) {
-      $receivedParam = $_REQUEST[$requiredParam];
-      if ($receivedParam) {
-        $receivedParams[] = $receivedParam;
-      } else {
-        throw new Exception("Error Processing Request", 1);
-      }
-    }
-    return $receivedParams;
+    $controller = new $this->className();
+    $result = $controller->$methodName(...$receivedParams);
+
+    return $result;
   }
 
   public function setClassName($className)
@@ -49,5 +44,5 @@ class ClassTools
   {
     return $this->className;
   }
-  
+
 }

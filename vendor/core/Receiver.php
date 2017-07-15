@@ -2,23 +2,23 @@
 namespace  vendor\core;
 
 /**
- * Reciver class
+ * Receiver class
  */
-class Reciver
+class Receiver
 {
   private $requestMethod;
   private $controllerName;
   private $methodName;
 
   /**
-   * @param string $rpString
+   * @param string $paramName
    * @param string $delimiter
    */
-  function __construct($rpString = 'method', $delimiter = '/')
+  function __construct($paramName = 'method', $delimiter = '/')
   {
     $this->requestMethod = $_SERVER['REQUEST_METHOD'];
 
-    $requestParams = $_REQUEST[$rpString];
+    $requestParams = $_REQUEST[$paramName];
     if (!empty($requestParams)) {
       $pieces = explode($delimiter, $requestParams);
       $this->controllerName = mb_convert_case($pieces[0], MB_CASE_TITLE);
@@ -42,6 +42,24 @@ class Reciver
   public function getMethodName()
   {
     return $this->methodName;
+  }
+
+  /**
+   * @param string $requiredParams
+   * @return array
+   */
+  public function getReceivedParams($requiredParams)
+  {
+    $receivedParams = [];
+    foreach ($requiredParams as $requiredParam) {
+      $receivedParam = $_REQUEST[$requiredParam];
+      if ($receivedParam) {
+        $receivedParams[] = $receivedParam;
+      } else {
+        throw new Exception("Error Processing Request", 1);
+      }
+    }
+    return $receivedParams;
   }
 
   /**

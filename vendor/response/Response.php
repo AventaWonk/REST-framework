@@ -56,4 +56,11 @@ class Response
     $this->code = $code;
   }
 
+  public static function send($result) {
+    if ($result) {
+      echo $result;
+    } else {
+      throw new \Exception("Method was not configured correctly", 1);
+    }
+  }
 }

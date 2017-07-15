@@ -1,7 +1,7 @@
 <?php
 namespace vendor\core;
 
-use vendor\core\ClassTools;
+use vendor\response\Response;
 
 /**
 * Router class
@@ -26,25 +26,20 @@ class Router
       $headers->setHeaders($appSettings);
       $headers->sendHeaders();
 
-			$reciver = new Reciver();
-			$className = self::APP_DIR .  DIRECTORY_SEPARATOR . self::CONTROLLERS_DIR . DIRECTORY_SEPARATOR . $reciver->getControllerName() . "Controller";
-			$methodName = $reciver->getMethodName();
+			$receiver = new Receiver();
+			$className = self::APP_DIR .  DIRECTORY_SEPARATOR . self::CONTROLLERS_DIR . DIRECTORY_SEPARATOR . $receiver->getControllerName() . "Controller";
+			$methodName = $receiver->getMethodName();
 
-      $ct = new ClassTools($className);
-			$methodParams = $ct->getMethodParams($methodName);
-      $receivedValues = $ct->getReceivedParams($methodParams);
+      $invoker = new Invoker($className);
+      $requiredParams = $invoker->getMethodParams($methodName);
 
-			$controller = new $className();
-			$result = $controller->$methodName(...$receivedValues);
+      $receivedParams =  $receiver->getReceivedParams($requiredParams);
 
-      if ($result) {
-        echo $result;
-      } else {
-        throw new \Exception("Method {$className} was not configured correctly", 1);
-      }
+      $result = $invoker->invoke($methodName, $receivedParams);
 
+      Response::send($result);
 		} catch (\Exception $e) {
-		  echo $e;
+		  Response::send($e);
 		}
 	}
 }
