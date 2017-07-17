@@ -45,18 +45,17 @@ class Receiver
   }
 
   /**
-   * @param string $requiredParams
+   * @param ReflectionParameter[] $requiredParams
    * @return array
    */
   public function getReceivedParams($requiredParams)
   {
     $receivedParams = [];
     foreach ($requiredParams as $requiredParam) {
-      $receivedParam = $_REQUEST[$requiredParam];
-      if ($receivedParam) {
-        $receivedParams[] = $receivedParam;
-      } else {
-        throw new Exception("Error Processing Request", 1);
+      if (isset($_REQUEST[$requiredParam->name])) {
+        $receivedParams[] = $_REQUEST[$requiredParam->name];
+      } else if (!$requiredParam->isDefaultValueAvailable()) {
+        throw new \Exception("Error Processing Request", 1);
       }
     }
     return $receivedParams;

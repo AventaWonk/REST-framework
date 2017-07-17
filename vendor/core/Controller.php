@@ -10,15 +10,15 @@ class Controller
 {
   const SUCCESS = true;
   const ERROR = false;
-  const DONE = true;
+  const DONE = 1;
 
   public function JSON($object = self::DONE, $result = self::SUCCESS)
   {
     header("Content-Type: application/json");
-    
+
     switch ($result) {
       case self::SUCCESS:
-        $r = new Response;
+        $r = new Response($object);
         $response = $r->success();
         break;
 
@@ -27,7 +27,7 @@ class Controller
         break;
 
       default:
-        $r = new Response;
+        $r = new Response($object);
         $response = $r->success();
         break;
     }
@@ -35,14 +35,17 @@ class Controller
     return json_encode($response);
   }
 
-  public function XML($object, $result = self::SUCCESS)
-  {
-    return new XMLResponse($object, $result);
-  }
-
-  public function View($object, $result = self::SUCCESS)
-  {
-    return new ViewResponse($object, $result);
-  }
+  /**
+  * @TODO
+  */
+  // public function XML($object, $result = self::SUCCESS)
+  // {
+  //   return new XMLResponse($object, $result);
+  // }
+  //
+  // public function View($object, $result = self::SUCCESS)
+  // {
+  //   return new ViewResponse($object, $result);
+  // }
 
 }
