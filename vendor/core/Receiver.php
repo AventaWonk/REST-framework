@@ -52,9 +52,9 @@ class Receiver
   {
     $receivedParams = [];
     foreach ($requiredParams as $requiredParam) {
-      if (isset($_REQUEST[$requiredParam->name])) {
-        $receivedParams[] = $_REQUEST[$requiredParam->name];
-      } else if (!$requiredParam->isDefaultValueAvailable()) {
+      if (isset($_REQUEST[$requiredParam])) {
+        $receivedParams[] = $_REQUEST[$requiredParam];
+      } else {
         throw new \Exception("Error Processing Request", 1);
       }
     }

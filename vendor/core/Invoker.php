@@ -1,9 +1,6 @@
 <?php
 namespace vendor\core;
 
-use Exception;
-use ReflectionMethod;
-
 /**
  * Invoker class
  */
@@ -22,27 +19,22 @@ class Invoker
    */
   public function getMethodParams($methodName)
   {
-    // $cacheFileName = $methodName . '.tmp';
-    // if (file_exists($cacheFileName)) {
-    //   return file($cacheFileName, FILE_IGNORE_NEW_LINES);
-    // }
-    // $params = [];
-    // $ReflectionMethod =  new ReflectionMethod($this->className, $methodName);
-    // foreach ($ReflectionMethod->getParameters() as $param) {
-    //   $params[] = $param->name;
-    // }
-    //
-    // $c = count($params);
-    // $f = fopen($cacheFileName, 'w');
-    // for ($i = 0; $i < $c; $i++) {
-    //   fwrite($fp, $params[$i]);
-    //   fwrite($fp, "\n");
-    // }
-    //
-    // return $params;
-    $ReflectionMethod =  new ReflectionMethod($this->className, $methodName);
-    
-    return $ReflectionMethod->getParameters();
+    $cacher = new Cacher($methodName);
+    $params = $cacher->getData();
+    if($params)
+      return $params;
+
+    $ReflectionMethod =  new \ReflectionMethod($this->className, $methodName);
+    $params = $ReflectionMethod->getParameters();
+    $params2 = [];
+    foreach ($params as $param) {
+      if (!$param->isDefaultValueAvailable()) {
+        $params2[] = $param->name;
+      }
+    }
+    $cacher->saveData($params2);
+
+    return $params2;
   }
 
   public function Invoke($methodName, $receivedParams)
