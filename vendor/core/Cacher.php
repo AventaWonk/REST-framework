@@ -2,19 +2,26 @@
 namespace vendor\core;
 
 /**
- *
+ * Cacher class
  */
 class Cacher
 {
   protected $fileURI;
   protected $cacheDir;
 
-  function __construct(string $fileName, $cacheDir = DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR)
+  /**
+   * @param string $fileName
+   * @param string $cacheDir
+   */
+  function __construct(string $fileName, $cacheDir = __DIR__ . DIRECTORY_SEPARATOR . 'cache')
   {
-    $this->fileURI = $this->getCacheURI($fileName);
     $this->cacheDir = $cacheDir;
+    $this->fileURI = $this->getCacheURI($fileName);
   }
 
+  /**
+   * @return array
+   */
   public function getData()
   {
     if (file_exists($this->fileURI)) {
@@ -22,8 +29,14 @@ class Cacher
     }
   }
 
+  /**
+   * @param array $data
+   */
   public function saveData($data)
   {
+    if (!file_exists($this->cacheDir)) {
+      mkdir($this->cacheDir, 0700);
+    }
     $length = count($data);
     $file = fopen($this->fileURI, 'w');
     for ($i = 0; $i < $length; $i++) {
@@ -33,9 +46,12 @@ class Cacher
     fclose($file);
   }
 
+  /**
+   * @param string $fileName
+   * @return string
+   */
   protected function getCacheURI($fileName)
   {
-    // return $this->cacheDir . $fileName . '.tmp';
-    return $fileName . '.tmp';
+    return $this->cacheDir . DIRECTORY_SEPARATOR . $fileName . '.tmp';
   }
 }

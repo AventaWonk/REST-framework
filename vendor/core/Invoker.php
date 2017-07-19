@@ -8,7 +8,7 @@ class Invoker
 {
   protected $className;
 
-  function __construct($className = false)
+  function __construct(string $className)
   {
     $this->className = $className;
   }
@@ -21,20 +21,19 @@ class Invoker
   {
     $cacher = new Cacher($methodName);
     $params = $cacher->getData();
-    if($params)
-      return $params;
-
+    if ($params) { return $params; }
     $ReflectionMethod =  new \ReflectionMethod($this->className, $methodName);
     $params = $ReflectionMethod->getParameters();
-    $params2 = [];
+
+    $handledParams = [];
     foreach ($params as $param) {
       if (!$param->isDefaultValueAvailable()) {
-        $params2[] = $param->name;
+        $handledParams[] = $param->name;
       }
     }
-    $cacher->saveData($params2);
+    $cacher->saveData($handledParams);
 
-    return $params2;
+    return $handledParams;
   }
 
   public function Invoke($methodName, $receivedParams)
@@ -54,5 +53,4 @@ class Invoker
   {
     return $this->className;
   }
-
 }
