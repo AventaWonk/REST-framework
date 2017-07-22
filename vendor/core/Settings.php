@@ -4,15 +4,15 @@ namespace vendor\core;
 /**
  *
  */
-class fSettings
+class Settings
 {
-  protected $dbConnection;
+  protected static $dbConnection;
   protected $accessControl;
 
   function __construct(array $settings)
   {
-    if (isset($settings['dbConnection'])) {
-      $this->dbConnection = $settings['dbConnection'];
+    if (isset($settings['db'])) {
+      self::$dbConnection = $settings['db'];
     }
 
     if (isset($settings['access-control'])) {
@@ -42,6 +42,23 @@ class fSettings
     }
 
     return $headers;
+  }
+
+  /**
+   * @static
+   * @return mixed
+   */
+  public static function getDbConnectionString()
+  {
+    $host = self::$dbConnection['host'];
+    $name = self::$dbConnection['name'];
+    $charset = self::$dbConnection['charset'];
+
+    return [
+      "mysql:host=$host;dbname=$name;charset=$charset",
+      self::$dbConnection['user'],
+      self::$dbConnection['password'],
+    ];
   }
 
   /**

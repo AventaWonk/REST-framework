@@ -97,11 +97,11 @@ class SQLGenerator
     ];
   }
 
-  protected static function generateSelectAll($model)
+  protected static function generateSelectAll($modelName)
   {
     $i = 0;
-    $model2 = get_class_vars($model::getChildModel());
-    foreach ($model2 as $key => $value) {
+    $model = get_class_vars($modelName::getChildModel());
+    foreach ($model as $key => $value) {
       if($i == 0) {
         $columns = $key;
       } else {
@@ -114,6 +114,24 @@ class SQLGenerator
       "query" => sprintf(self::SELECT_ALL, $columns, $model::getChildTableName()),
     ];
   }
+
+  // protected static function generateSelectById($model)
+  // {
+  //   $i = 0;
+  //   $model = get_class_vars($model::getChildModel());
+  //   foreach ($model as $key => $value) {
+  //     if($i == 0) {
+  //       $columns = $key;
+  //     } else {
+  //       $columns .= ", " . $key;
+  //     }
+  //     $i++;
+  //   }
+  //
+  //   return [
+  //     "query" => sprintf(self::SELECT_ALL, $columns, $model::getChildTableName()),
+  //   ];
+  // }
 
    protected static function generateUpdate($newModel, $previousModel)
    {

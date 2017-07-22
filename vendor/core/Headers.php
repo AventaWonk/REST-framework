@@ -9,22 +9,12 @@ class Headers
 
   private $headers = [];
 
-  function __construct()
+  function __construct(Settings $settings)
   {
-    
+    $this->headers = $settings->getAccessControlHeaders();
   }
 
-  // public function setAccessControlOrigin()
-  // {
-  //   $this->headers[] = "Access-Control-Allow-Origin: *";
-  // }
-  //
-  // public function setAccessControlMethods()
-  // {
-  //   $this->headers[] = "Access-Control-Allow-Methods: *";
-  // }
-
-  public function setHeaders(fSettings $as)
+  public function setHeaders(Settings $as)
   {
     $headers = $as->getAccessControlHeaders();
   }

@@ -11,6 +11,13 @@ $settings = [
       'POST'
     ]
   ],
+  'db' => [
+    'host' => 'localhost',
+    'name' => 'dbname',
+    'user' => 'root',
+    'password' => '',
+    'charset' => 'utf8'
+  ],
 ];
 
 Router::start($settings);

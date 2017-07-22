@@ -11,8 +11,8 @@ use vendor\database\SQLgenerator;
 */
 class Model
 {
-  private $modelId = null;
-  private static $foundModels;
+  protected $modelId = null;
+  protected static $foundModels;
 
   public static function getChildModelName()
   {
@@ -43,7 +43,7 @@ class Model
 
   public static function add($model)
   {
-    $dbh = new PDO(...Settings::get());
+    $dbh = new PDO(...Settings::getDbConnectionString());
     $sql = SQLgenerator::generateQuery(SQLgenerator::INSERT, $model);
     $sth = $dbh->prepare($sql["query"]);
     $sth->execute($sql["params"]);
@@ -52,7 +52,7 @@ class Model
 
   public static function find($model)
   {
-    $dbh = new PDO(...Settings::get());
+    $dbh = new PDO(...Settings::getDbConnectionString());
     $sql = SQLgenerator::generateQuery(SQLgenerator::SELECT, $model);
     $sth = $dbh->prepare($sql["query"]);
     $sth->execute($sql["params"]);
@@ -65,29 +65,50 @@ class Model
       $dbh = null;
       return clone $foundModel;
     } else {
-      throw new Exception("Has not been found", 1);
+      return null;
+    }
+  }
+
+  public static function findById($id)
+  {
+    $dbh = new PDO(...Settings::getDbConnectionString());
+    $sql = SQLgenerator::generateQuery(SQLgenerator::SELECT_BY_ID, $id);
+    $sth = $dbh->prepare($sql["query"]);
+    $sth->execute($sql["params"]);
+    $sth->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, self::getChildModelName());
+    $foundModel = $sth->fetch();
+    if ($foundModel) {
+      $uid = uniqid();
+      $foundModel->modelId = $uid;
+      self::$foundModels[$uid] = $foundModel;
+      $dbh = null;
+      return clone $foundModel;
+    } else {
+      return null;
     }
   }
 
   public static function findAll()
   {
     $model = get_called_class();
-    $rows = [];
-    $dbh = new PDO(...Settings::get());
+    $dbh = new PDO(...Settings::getDbConnectionString());
     $sql = SQLgenerator::generateQuery(SQLgenerator::SELECT_ALL, $model);
     $sth = $dbh->query($sql["query"]);
     $sth->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $model);
+
+    $rows = [];
     while($obj = $sth->fetch()) {
         $rows[] = $obj;
     }
     $dbh = null;
+
     return $rows;
   }
 
   public function save() {
     if (self::$foundModels[$this->modelId])
     {
-      $dbh = new PDO(...Settings::get());
+      $dbh = new PDO(...Settings::getDbConnectionString());
       $sql = SQLgenerator::generateQuery(SQLgenerator::UPDATE, $this, self::$foundModels[$this->modelId]);
       $sth = $dbh->prepare($sql["query"]);
       $sth->execute($sql["params"]);
@@ -99,7 +120,7 @@ class Model
 
   public function delete()
   {
-    $dbh = new PDO(...Settings::get());
+    $dbh = new PDO(...Settings::getDbConnectionString());
     $sql = SQLgenerator::generateQuery(SQLgenerator::DELETE, $this);
     $sth = $dbh->prepare($sql["query"]);
     $sth->execute($sql["params"]);

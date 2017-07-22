@@ -8,11 +8,6 @@ use vendor\core\Model;
 */
 class Sample extends Model
 {
-
-  public $field1;
-
-  public $field2;
-
-  public $fieldN;
-
+  public $id;
+  public $text;
 }

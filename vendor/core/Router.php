@@ -20,10 +20,9 @@ class Router
 	public static function start($settings = [])
 	{
 		try {
-      $appSettings = new fSettings($settings);
+      $appSettings = new Settings($settings);
 
-      $headers = new Headers();
-      $headers->setHeaders($appSettings);
+      $headers = new Headers($appSettings);
       $headers->sendHeaders();
 
 			$receiver = new Receiver();
