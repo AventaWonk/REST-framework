@@ -22,7 +22,7 @@ class Cacher
   /**
    * @return array
    */
-  public function getData()
+  public function getData() : array
   {
     if (file_exists($this->fileURI)) {
       return file($this->fileURI, FILE_IGNORE_NEW_LINES);

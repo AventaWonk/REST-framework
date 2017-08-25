@@ -13,7 +13,7 @@ class Authentication
     self::$currentUser = false;
   }
 
-  public function addUser($user)
+  public function addUser(User $user)
   {
     $findingUser = new User();
     $findingUser->registrationDate = null;
@@ -26,12 +26,12 @@ class Authentication
     User::add($user);
   }
 
-  public function deleteUser($user)
+  public function deleteUser(User $user)
   {
     User::delete($user->id);
   }
 
-  public function login($user)
+  public function login(User $user)
   {
     $foundUser = User::find($user);
     if ($foundUser) {
